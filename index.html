@@ -1,1 +1,634 @@
 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love ME - A Special Surprises For You 💖</title>
+
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        cursive: ['Great Vibes', 'cursive']
+                    },
+                    colors: {
+                        rose: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Smooth custom scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Floating background elements animation */
+        @keyframes gentleFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(1.5deg);
+            }
+        }
+
+        .animate-float {
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        /* Wire line growth animation */
+        @keyframes drawLine {
+            0% {
+                height: 0;
+                opacity: 0;
+            }
+            100% {
+                height: 70px;
+                opacity: 1;
+            }
+        }
+
+        .wire-active {
+            animation: drawLine 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Content stagger reveal animation */
+        @keyframes revealContent {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0px);
+            }
+        }
+
+        .content-active {
+            animation: revealContent 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Pulse glow effect for romantic elements */
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(225, 29, 72, 0.4), 0 0 40px rgba(244, 63, 94, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 35px rgba(225, 29, 72, 0.7), 0 0 60px rgba(244, 63, 94, 0.4);
+            }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        /* Shimmer shimmer text background */
+        @keyframes shimmerText {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, #fff 0%, #ffe4e6 25%, #ffffff 50%, #ffe4e6 75%, #fff 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmerText 4s linear infinite;
+        }
+
+        /* Polaroid card hover shine */
+        .polaroid-card {
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polaroid-card:hover {
+            transform: translateY(-10px) scale(1.05) rotate(0deg) !important;
+            z-index: 30;
+            box-shadow: 0 25px 50px -12px rgba(225, 29, 72, 0.35);
+        }
+
+        /* Background Particle Canvas */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Audio Control Pill Styling */
+        .audio-pill {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+
+<body class="m-0 p-0 min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-rose-400 via-rose-600 to-rose-900 overflow-x-hidden text-white font-sans relative">
+
+    <!-- Interactive Background Floating Particles & Petals Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Hidden Audio Element -->
+    <audio id="loveAudio" loop>
+        <source src="i-love-you.ogg" type="audio/ogg">
+        <source src="i-love-you.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Floating Music Controls Indicator (Revealed when audio starts) -->
+    <div id="audioControls" class="fixed top-5 right-5 z-50 opacity-0 transition-all duration-700 pointer-events-none transform translate-y-[-20px]">
+        <button id="toggleAudioBtn" class="audio-pill bg-white/20 hover:bg-white/30 border border-white/30 text-white px-4 py-2 rounded-full shadow-lg flex items-center space-x-3 text-xs tracking-wider uppercase font-semibold cursor-pointer transition-transform hover:scale-105 active:scale-95">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-300 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-400"></span>
+            </span>
+            <i id="audioIcon" class="fa-solid fa-music text-rose-200 animate-spin" style="animation-duration: 4s;"></i>
+            <span id="audioText">Playing Melody 🎵</span>
+        </button>
+    </div>
+
+    <main class="relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-8 md:pt-12 pb-24 px-4">
+
+        <div class="w-full max-w-3xl flex flex-col items-center text-center relative">
+
+            <!-- Floating Title Header -->
+            <div class="mb-4 space-y-1">
+                <span class="font-cursive text-3xl md:text-5xl text-rose-200 drop-shadow-md">For My Beloved</span>
+                <h1 class="font-serif text-xl md:text-3xl font-bold tracking-widest uppercase shimmer-text drop-shadow">A little gift from Ujjwal Don<span class="text-xl text-[#efaeb9] font-semibold">(#Somiyalover)</span></h1>
+            </div>
+
+            <!-- Enhanced Floating Bouquet Container -->
+            <div class="animate-float relative transition-all duration-500 hover:scale-[1.03] z-20 my-2 group">
+                <!-- Glowing Ambient Backlight -->
+                <div class="absolute inset-0 bg-gradient-to-r from-rose-300/40 to-pink-500/40 blur-3xl rounded-full scale-95 translate-y-4 group-hover:scale-105 transition-all duration-500"></div>
+                
+                <!-- Main Bouquet Image with Fallback Placeholder -->
+                <img src="/imgs/flower.png" 
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=800&auto=format&fit=crop';" 
+                     alt="Romantic Flower Bouquet" 
+                     class="relative z-10 w-auto max-h-[38vh] md:max-h-[42vh] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] transition-transform duration-500 group-hover:rotate-1">
+            </div>
+
+            <!-- Initial Interactive Button Container -->
+            <div class="flex flex-col items-center justify-center mt-6 z-20">
+                <button id="loveButton" class="group relative inline-flex items-center justify-center px-10 py-4 font-bold text-white text-base tracking-widest uppercase overflow-hidden rounded-full shadow-[0_10px_30px_rgba(225,29,72,0.5)] transition-all duration-300 hover:shadow-[0_20px_45px_rgba(225,29,72,0.8)] hover:scale-110 active:scale-95 cursor-pointer border border-white/30 backdrop-blur-md bg-gradient-to-r from-rose-500 via-pink-600 to-rose-600">
+                    <span class="absolute inset-0 w-full h-full bg-white/20 group-hover:scale-110 transition-transform duration-500 ease-out transform -skew-x-12 -translate-x-full group-hover:translate-x-full"></span>
+                    <span class="relative flex items-center gap-3">
+                        <i class="fa-solid fa-heart animate-bounce text-rose-200"></i>
+                        Fuck|LOVE ME
+                        <i class="fa-solid fa-sparkles text-amber-200"></i>
+                    </span>
+                </button>
+                <p id="clickHint" class="text-xs text-rose-200/80 mt-3 font-light tracking-widest animate-pulse">✨ Click to unlock a magical surprise ✨</p>
+            </div>
+
+            <!-- Suspended Wire Line -->
+            <div id="hangingWire" class="w-[3px] bg-gradient-to-b from-white/90 via-rose-300 to-rose-200 h-0 opacity-0 relative left-0 origin-top mt-4 shadow-[0_0_10px_rgba(255,255,255,0.8)]"></div>
+
+            <!-- Revealed Content Area -->
+            <div id="hiddenGallery" class="hidden flex flex-col items-center w-full opacity-0">
+
+                <!-- Romantic Message Banner -->
+                <div class="my-6 px-4">
+                    <span class="font-cursive text-4xl md:text-6xl text-rose-100 drop-shadow-lg">Treasured Memories</span>
+                    <p class="text-xs md:text-sm text-rose-100/90 tracking-widest uppercase font-light mt-1">Every picture holds a piece of my heart</p>
+                </div>
+
+                <!-- Polaroid Gallery Grid with Ambient Soft Lighting -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 w-full max-w-2xl lg:max-w-5xl px-4 mt-2 z-20">
+                    
+                    <!-- Photo 1 -->
+                    <div class="polaroid-card bg-white/95 p-3.5 pb-6 rounded-md shadow-2xl transform -rotate-3 border border-white/60 relative cursor-pointer group">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-rose-200/50 backdrop-blur-xs border border-white/40 shadow-xs rotate-2 z-20"></div>
+                        <div class="w-full aspect-[4/5] overflow-hidden bg-rose-50 rounded-xs relative">
+                            <img src="https://scontent.fbdp2-1.fna.fbcdn.net/v/t1.15752-9/816224725_1047362211667052_3879851078048157562_n.jpg?_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=ShKbRUsiz9sQ7kNvwEWaudW&_nc_oc=AdpvlZnGT2JSjQ6aVe4rVDnvWaHgBlXPrq9oy1VizLjkGKjyJymgVhMDHX3378_aGmE&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_ss=7a22e&oh=03_Q7cD6QF1Fn3TkJtAa0A2pKCy0VkxSCbLWkflKlDq2qA58RrNrQ&oe=6ADB2308" 
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop';" 
+                                 alt="Your Smile" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-rose-900/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <p class="mt-3 font-serif text-sm text-rose-950 font-semibold tracking-wider text-center">Your dara👹</p>
+                    </div>
+
+                    <!-- Photo 2 -->
+                    <div class="polaroid-card bg-white/95 p-3.5 pb-6 rounded-md shadow-2xl transform rotate-2 border border-white/60 md:-translate-y-4 relative cursor-pointer group">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-rose-200/50 backdrop-blur-xs border border-white/40 shadow-xs -rotate-1 z-20"></div>
+                        <div class="w-full aspect-[4/5] overflow-hidden bg-rose-50 rounded-xs relative">
+                            <img src="https://scontent.fbdp2-1.fna.fbcdn.net/v/t1.15752-9/814799981_1616444603528947_6577146915980999991_n.jpg?_nc_cat=111&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=CiByG5ppsfYQ7kNvwEO-X2v&_nc_oc=Adp6Uj2MP8x_l_RSQ5oMT6VA-DX8skEj04L73PrG-r56Ld3Ns8xr51t9DcxCRWMU-r8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_ss=7a22e&oh=03_Q7cD6QF92lONXd4tziHc1Qd8B_vxljlNSQw2CJIeEQS8ybNp2Q&oe=6ADB1FFF" 
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop';" 
+                                 alt="Every Moment" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-rose-900/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <p class="mt-3 font-serif text-sm text-rose-950 font-semibold tracking-wider text-center">Newari gurll👹</p>
+                    </div>
+
+                    <!-- Photo 3 -->
+                    <div class="polaroid-card bg-white/95 p-3.5 pb-6 rounded-md shadow-2xl transform -rotate-1 border border-white/60 relative cursor-pointer group">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-rose-200/50 backdrop-blur-xs border border-white/40 shadow-xs rotate-3 z-20"></div>
+                        <div class="w-full aspect-[4/5] overflow-hidden bg-rose-50 rounded-xs relative">
+                            <img src="https://scontent.fbdp2-1.fna.fbcdn.net/v/t1.15752-9/814113108_29565651613022381_784858456401885668_n.jpg?_nc_cat=100&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=nyHP_jQQV58Q7kNvwH849og&_nc_oc=Adr3fM9N0-L6UT53-BiOfa2k_-Myx8QZ-DcJUstk4PZt3kujIbGJ1YCoiKXx-P3P704&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_ss=7a22e&oh=03_Q7cD6QEkKd38NfaxsG-Bvgl9-LH2q5NplvHfX1r4KGft7cuHOA&oe=6ADB497C" 
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop';" 
+                                 alt="With You" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-rose-900/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <p class="mt-3 font-serif text-sm text-rose-950 font-semibold tracking-wider text-center">Every calls</p>
+                    </div>
+
+                      <!-- Photo 4 -->
+                    <div class="polaroid-card bg-white/95 p-3.5 pb-6 rounded-md shadow-2xl transform -rotate-1 border border-white/60 relative cursor-pointer group">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-rose-200/50 backdrop-blur-xs border border-white/40 shadow-xs rotate-3 z-20"></div>
+                        <div class="w-full aspect-[4/5] overflow-hidden bg-rose-50 rounded-xs relative">
+                            <img src="https://scontent.fbdp2-1.fna.fbcdn.net/v/t1.15752-9/813877665_2143331946559299_8072514221047065385_n.jpg?_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=fc17b8&_nc_ohc=2j6CdKnpY60Q7kNvwGzqsj7&_nc_oc=AdqDlRnEK9-Q1ada2AjyPS0oObvKSfxEvOFVmxtJbpfy9PLH_9nDxqhqn4jwU3KyoC8&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.fbdp2-1.fna&_nc_ss=7a22e&oh=03_Q7cD6QHwF9viYEO8l9ZToq1DoHNfMjIsnhJyFjnASOSYwJ6e_Q&oe=6ADB2BA3" 
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop';" 
+                                 alt="With You"  class="w-[70]"
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                            <div class="absolute inset-0 bg-gradient-to-t from-rose-900/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        <p class="mt-3 font-serif text-sm text-rose-950 font-semibold tracking-wider text-center">Every calls</p>
+                    </div>
+
+                </div>
+
+                <!-- Glassmorphism Romantic Proposal Card -->
+                <div class="w-full max-w-lg mt-12 p-8 md:p-10 rounded-3xl bg-white/15 backdrop-blur-xl border border-white/30 shadow-[0_25px_60px_rgba(0,0,0,0.25)] text-white relative overflow-hidden pulse-glow">
+                    
+                    <!-- Decorative Floating Sparks -->
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-rose-400/20 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-400/20 rounded-full blur-2xl pointer-events-none"></div>
+
+                    <div class="flex justify-center mb-2">
+                        <span class="text-4xl animate-pulse">💍</span>
+                    </div>
+
+                    <h2 class="font-serif text-2xl md:text-3xl font-bold tracking-wide uppercase mb-3 text-rose-100 drop-shadow">
+                        Be Mine Forever? 💖
+                    </h2>
+
+                    <!-- Romantic Love Note Typing Animation Target -->
+                    <div class="min-h-[90px] flex items-center justify-center">
+                        <p id="loveNoteText" class="text-sm md:text-base opacity-95 leading-relaxed font-light italic text-rose-50"></p>
+                    </div>
+
+                    <!-- Romantic Counter / Interactive Pill Badges -->
+                    <div class="flex flex-wrap justify-center gap-2 mt-6 pt-4 border-t border-white/20 text-xs">
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-infinity text-rose-300"></i> Infinite Love
+                        </span>
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-star text-amber-300"></i> My Favorite Person
+                        </span>
+                        <span class="bg-white/20 px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-heart text-rose-300"></i> Always & Forever
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Final Choices Container -->
+                <div class="mt-10 min-h-[90px] flex flex-col md:flex-row items-center justify-center gap-6 w-full max-w-md relative">
+                    
+                    <!-- Yes Button (Confetti Trigger) -->
+                    <button id="yesButton" class="w-full md:w-auto px-10 py-4 bg-gradient-to-r from-[#f09eac] to-[#e90f0f] text-white font-bold text-sm tracking-widest uppercase rounded-full shadow-[0_10px_25px_rgba(16,185,129,0.4)] hover:shadow-[0_15px_35px_rgba(16,185,129,0.6)] transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer border border-white/20 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-check-circle"></i> YES, I'd Love To! 💕
+                    </button>
+
+                    <!-- Runaway Reject Button -->
+                    <button id="rejectButton" class="w-full md:w-auto text-sm font-bold tracking-widest text-rose-600 px-10 py-4 bg-white/95 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.25)] transition-all duration-200 active:scale-95 cursor-pointer uppercase border border-white/80 relative">
+                        No Thanks 🙈
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Modal Message Popup after clicking YES -->
+    <div id="loveModal" class="fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="bg-gradient-to-b from-rose-500 to-rose-700 p-8 md:p-10 rounded-3xl max-w-md w-full text-center text-white border border-white/30 shadow-2xl transform scale-90 transition-transform duration-500 relative">
+            <div class="text-6xl mb-4 animate-bounce">🥰 🎉</div>
+            <div class="flex justify-center w-full items-center">
+            <h3 class="font-serif text-3xl font-bold mb-3 shimmer-text">You made me sick</h3> <span class="text-3xl">🤒</span>
+            </div>
+            <p class="text-sm md:text-base opacity-90 leading-relaxed font-light mb-6">
+               You just made me listen your guffs and shit!
+Loved to listen it though💞
+Thanks for being Don with me😘🖕🏻
+            </p>
+            <button id="closeModalBtn" class="px-8 py-3 bg-white text-rose-600 rounded-full font-bold uppercase text-xs tracking-widest shadow-lg hover:bg-rose-50 transition-colors cursor-pointer">
+                Forever Loco 💕
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* --- 1. Background Canvas Particle Engine --- */
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let canvasWidth = canvas.width = window.innerWidth;
+        let canvasHeight = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvasWidth = canvas.width = window.innerWidth;
+            canvasHeight = canvas.height = window.innerHeight;
+        });
+
+        // Particle class for floating hearts, rose petals, and stars
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvasWidth;
+                this.y = canvasHeight + Math.random() * 100;
+                this.size = Math.random() * 14 + 8;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.type = Math.random() > 0.4 ? 'heart' : (Math.random() > 0.5 ? 'petal' : 'star');
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotSpeed = (Math.random() - 0.5) * 0.02;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotSpeed;
+
+                if (this.y < -30) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.opacity;
+
+                if (this.type === 'heart') {
+                    ctx.fillStyle = '#fecdd3';
+                    ctx.font = `${this.size}px sans-serif`;
+                    ctx.fillText('❤️', 0, 0);
+                } else if (this.type === 'petal') {
+                    ctx.fillStyle = '#fb7185';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size / 2, Math.PI / 4, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = '#fef08a';
+                    ctx.font = `${this.size * 0.8}px sans-serif`;
+                    ctx.fillText('✨', 0, 0);
+                }
+
+                ctx.restore();
+            }
+        }
+
+        // Initialize particle pool
+        function initParticles() {
+            particles = [];
+            const particleCount = window.innerWidth < 768 ? 30 : 65;
+            for (let i = 0; i < particleCount; i++) {
+                const p = new Particle();
+                p.y = Math.random() * canvasHeight; // fill screen initially
+                particles.push(p);
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+        /* --- 2. Romantic Typing Effect --- */
+        const loveNoteMessage = "Every single calls is better and precious with you.These flowers belongs to my guffadi.My thamel janey partner.Will you walk in thamel street with me for onetime😘🤣";
+        let noteIndex = 0;
+
+        function typeLoveNote() {
+            const target = document.getElementById('loveNoteText');
+            if (noteIndex < loveNoteMessage.length) {
+                target.innerHTML += loveNoteMessage.charAt(noteIndex);
+                noteIndex++;
+                setTimeout(typeLoveNote, 5);
+            }
+        }
+
+        /* --- 3. Audio Controller --- */
+        const audio = document.getElementById('loveAudio');
+        const audioControls = document.getElementById('audioControls');
+        const toggleAudioBtn = document.getElementById('toggleAudioBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioText = document.getElementById('audioText');
+
+        function playRomanticAudio() {
+            if (audio) {
+                audio.play().then(() => {
+                    audioControls.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+                }).catch(err => {
+                    console.log('Audio autoplay prevented:', err);
+                });
+            }
+        }
+
+        toggleAudioBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                audioIcon.classList.add('animate-spin');
+                audioText.innerText = "Playing Melody 🎵";
+            } else {
+                audio.pause();
+                audioIcon.classList.remove('animate-spin');
+                audioText.innerText = "Music Paused 🔇";
+            }
+        });
+
+        /* --- 4. Main "LOVE ME" Button Event Handler --- */
+        let hasClickedLove = false;
+
+        document.getElementById('loveButton').addEventListener('click', function (e) {
+            const button = e.currentTarget;
+
+            // Trigger audio
+            playRomanticAudio();
+
+            // Hide hint message
+            document.getElementById('clickHint').classList.add('opacity-0');
+
+            // Generate Burst Heart & Confetti Explosion
+            createHeartExplosion(button);
+
+            if (!hasClickedLove) {
+                hasClickedLove = true;
+
+                // Wire & Gallery Reveal Sequence
+                const wire = document.getElementById('hangingWire');
+                const gallery = document.getElementById('hiddenGallery');
+
+                gallery.classList.remove('hidden', 'content-active');
+                wire.classList.remove('wire-active');
+
+                void wire.offsetWidth; // Force layout recalculation
+
+                wire.classList.add('wire-active');
+
+                setTimeout(() => {
+                    gallery.classList.add('content-active');
+                    
+                    // Start typing animation
+                    setTimeout(typeLoveNote, 400);
+
+                    // Smooth scroll to gallery
+                    setTimeout(() => {
+                        gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+
+                }, 600);
+            }
+        });
+
+        /* --- 5. Heart Explosion Particle Burst --- */
+        function createHeartExplosion(element) {
+            const rect = element.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2 + window.scrollX;
+            const startY = rect.top + rect.height / 2 + window.scrollY;
+
+            const particleCount = 60;
+            const EMOJIS = ['❤️', '💖', '🌹', '✨', '💕', '💗'];
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('span');
+                p.innerHTML = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+                p.style.position = 'absolute';
+                p.style.pointerEvents = 'none';
+                p.style.fontSize = `${Math.random() * 18 + 16}px`;
+                p.style.left = `${startX}px`;
+                p.style.top = `${startY}px`;
+                p.style.transform = 'translate(-50%, -50%)';
+                p.style.zIndex = '9999';
+
+                document.body.appendChild(p);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 140 + 60;
+                const destX = Math.cos(angle) * velocity;
+                const destY = Math.sin(angle) * velocity - 60; // slight upward bias
+
+                const anim = p.animate([
+                    { transform: 'translate(-50%, -50%) scale(0.5) rotate(0deg)', opacity: 1 },
+                    {
+                        transform: `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(1.2) rotate(${Math.random() * 360}deg)`,
+                        opacity: 0.9,
+                        offset: 0.6
+                    },
+                    {
+                        transform: `translate(calc(-50% + ${destX * 1.2}px), calc(-50% + ${destY + 80}px)) scale(0.1) rotate(${Math.random() * 720}deg)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: Math.random() * 600 + 900,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)',
+                    fill: 'forwards'
+                });
+
+                anim.onfinish = () => p.remove();
+            }
+        }
+
+        /* --- 6. Playful Runaway Reject Button Interaction --- */
+        const rejectBtn = document.getElementById('rejectButton');
+
+        function moveRejectButton() {
+            const btnWidth = rejectBtn.offsetWidth || 140;
+            const btnHeight = rejectBtn.offsetHeight || 45;
+            const maxX = Math.max(20, window.innerWidth - btnWidth - 20);
+            const maxY = Math.max(20, window.innerHeight - btnHeight - 20);
+
+            const randomX = 20 + Math.random() * Math.max(0, maxX - 20);
+            const randomY = 20 + Math.random() * Math.max(0, maxY - 20);
+
+            rejectBtn.style.position = 'fixed';
+            rejectBtn.style.left = `${randomX}px`;
+            rejectBtn.style.top = `${randomY}px`;
+            rejectBtn.style.zIndex = '1000';
+            rejectBtn.style.margin = '0';
+        }
+
+        rejectBtn.addEventListener('mouseenter', moveRejectButton);
+        rejectBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveRejectButton();
+        });
+        rejectBtn.addEventListener('click', moveRejectButton);
+
+        /* --- 7. YES Button & Modal Handler --- */
+        const yesButton = document.getElementById('yesButton');
+        const loveModal = document.getElementById('loveModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        yesButton.addEventListener('click', (e) => {
+            createHeartExplosion(e.currentTarget);
+            
+            setTimeout(() => {
+                loveModal.classList.remove('opacity-0', 'pointer-events-none');
+                loveModal.querySelector('div').classList.remove('scale-90');
+                loveModal.querySelector('div').classList.add('scale-100');
+            }, 300);
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            loveModal.classList.add('opacity-0', 'pointer-events-none');
+            loveModal.querySelector('div').classList.remove('scale-100');
+            loveModal.querySelector('div').classList.add('scale-90');
+        });
+    </script>
+</body>
+
+</html>
